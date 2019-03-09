@@ -1,23 +1,23 @@
 const express = require('express');
-const Country = require('../models/Country')
+const Question = require('../models/Question')
 
 const router = express.Router();
 
 router.get('/', (req, res, next) => {
-  Country.find()
-    .then(countries => {
-      res.json(countries);
+  Question.find()
+    .then(questions => {
+      res.json(questions);
     })
     .catch(err => next(err))
 });
 
 router.post('/', (req, res, next) => {
-  let { name, capitals, area, description } = req.body
-  Country.create({ name, capitals, area, description })
-    .then(country => {
+  let { name } = req.body
+  Question.create({ name })
+    .then(question => {
       res.json({
         success: true,
-        country
+        question
       });
     })
     .catch(err => next(err))

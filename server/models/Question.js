@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
-const countrySchema = new mongoose.Schema({
+const questionSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, 'The country name is required'],
+    required: [true, 'The question name is required'],
     minlength: 1
   },
   capitals: {
@@ -18,6 +18,6 @@ const countrySchema = new mongoose.Schema({
   },
 });
 
-const Country = mongoose.model('Country', countrySchema);
+const Question = mongoose.model('Question', questionSchema);
 
-module.exports = Country;
+module.exports = Question;

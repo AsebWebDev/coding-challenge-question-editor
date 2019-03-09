@@ -2,31 +2,27 @@ const path = require('path')
 require('dotenv').config({ path: path.join(__dirname, '../.env') })
 
 const mongoose = require("mongoose");
-// const User = require("../models/User");
 
 require('../configs/database')
 
-let users = [
+let questions = [
   {
-    username: "alice",
-    password: bcrypt.hashSync("alice", bcrypt.genSaltSync(bcryptSalt)),
+    name: "alice",
   },
   {
-    username: "bob",
-    password: bcrypt.hashSync("bob", bcrypt.genSaltSync(bcryptSalt)),
+    name: "bob",
   }
 ]
 
-User.deleteMany()
+Question.deleteMany()
   .then(() => {
-    return User.create(users)
+    return Question.create(questions)
   })
   .then(usersCreated => {
-    console.log(`${usersCreated.length} users created with the following id:`);
+    console.log(`${usersCreated.length} questions created with the following id:`);
     console.log(usersCreated.map(u => u._id));
   })
   .then(() => {
-    // Close properly the connection to Mongoose
     mongoose.disconnect()
   })
   .catch(err => {
