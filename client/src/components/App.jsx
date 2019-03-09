@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Route, NavLink, Switch } from 'react-router-dom';
 import Questions from './pages/Questions';
 import AddQuestion from './pages/AddQuestion';
+import QuestionDetail from './pages/QuestionDetail';
 
 export default class App extends Component {
   constructor(props) {
@@ -21,6 +22,7 @@ export default class App extends Component {
         </header>
         <Switch>
           <Route path="/" exact component={Questions} />
+          <Route path="/questions/:questionId" exact component={QuestionDetail} />
           <Route path="/add-question" component={AddQuestion} />
           <Route render={() => <h2>404</h2>} />
         </Switch>

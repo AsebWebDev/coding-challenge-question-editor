@@ -24,6 +24,13 @@ export default {
       .catch(errHandler)
   },
 
+  getQuestion(id) {
+    return service
+      .get('/questions/'+id)
+      .then(res => res.data)
+      .catch(errHandler)
+  },
+
   addQuestion(body) {
     return service
       .post('/questions', body)

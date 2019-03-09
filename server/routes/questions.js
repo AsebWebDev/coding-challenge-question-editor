@@ -6,7 +6,16 @@ const router = express.Router();
 router.get('/', (req, res, next) => {
   Question.find()
     .then(questions => {
+			console.log('TCL: questions', questions)
       res.json(questions);
+    })
+    .catch(err => next(err))
+});
+
+router.get('/:id', (req, res, next) => {
+  Question.findById(req.params.id)
+    .then(question => {
+      res.json(question);
     })
     .catch(err => next(err))
 });
