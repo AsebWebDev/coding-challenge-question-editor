@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { MDBContainer, MDBTable, MDBTableHead, MDBTableBody} from 'mdbreact';
+import RadioButton from '../RadioButton';
 import api from '../../api';
 
 export default class QuestionDetail extends Component {
@@ -9,11 +10,24 @@ export default class QuestionDetail extends Component {
       question: null,
     }
   }
+
+  handleRadioButtonClick = (e, rowIndex, colIndex) => {
+    console.log("handleRadioButtonClick clicked")
+    let newQuestion = this.state.question;
+    console.log("Vorher: " + newQuestion.rows[rowIndex].col[colIndex])
+    newQuestion.rows[rowIndex].col[colIndex] = !newQuestion.rows[rowIndex].col[colIndex];
+    console.log("Nachher: " + newQuestion.rows[rowIndex].col[colIndex])
+
+    this.setState({
+      question: newQuestion
+    })
+  };
+
   render() {
     return this.state.question 
     ? (
       <MDBContainer className="QuestionDetail">
-        <h2>{this.state.question.title}</h2>
+        <h2>{this.state.title}</h2>
         <MDBTable>
         <MDBTableHead>
           <tr>
@@ -26,12 +40,10 @@ export default class QuestionDetail extends Component {
         <MDBTableBody>
           {this.state.question.rows.map((row, i) => 
             <tr key={i}>
-            <td>{row.title}</td>
-            {row.col.map((col, j) => 
-              <td key={j}>
-                {col ? "true" : "false"}
-              </td>
-            )}
+              <td>{row.title}</td>
+              {row.col.map((col, j) => 
+                <td key={j}><RadioButton rowIndex={i} colIndex= {j} checked={col} handleRadioButtonClick={this.handleRadioButtonClick}/></td>
+              )}
             </tr>
           )}
         </MDBTableBody>
