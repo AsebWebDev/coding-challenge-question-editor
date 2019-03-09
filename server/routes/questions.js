@@ -12,8 +12,8 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  let { name } = req.body
-  Question.create({ name })
+  let { title } = req.body
+  Question.create({ title })
     .then(question => {
       res.json({
         success: true,

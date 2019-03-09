@@ -2,15 +2,32 @@ const path = require('path')
 require('dotenv').config({ path: path.join(__dirname, '../.env') })
 
 const mongoose = require("mongoose");
+const Question = require("../models/Question");
 
 require('../configs/database')
 
 let questions = [
   {
-    name: "alice",
-  },
-  {
-    name: "bob",
+    title: "Question 1",
+    colTitles: ["Col1", "Col2", "Col3", "Col4"],
+    rows: [
+      {
+        title: "Row1",
+        col: [false, false, false, true]
+      },
+      {
+        title: "Row2",
+        col: [false, true, false, false]
+      },
+      {
+        title: "Row3",
+        col: [false, true, false, false]
+      },
+      {
+        title: "Row4",
+        col: [false, true, false, false]
+      },
+    ]
   }
 ]
 
