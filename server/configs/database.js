@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
-const uri = process.env.MONGODB_URI 
+const uri = "mongodb://localhost/question-editor"
+// const uri = process.env.MONGODB_URI 
 
 mongoose
   .connect(uri, { useNewUrlParser: true })

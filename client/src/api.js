@@ -17,62 +17,16 @@ const errHandler = err => {
 export default {
   service: service,
 
-  isLoggedIn() {
-    return localStorage.getItem('user') != null
-  },
-
-  getLocalStorageUser() {
-    return JSON.parse(localStorage.getItem('user'))
-  },
-
-  signup(userInfo) {
+  getQuestions() {
     return service
-      .post('/signup', userInfo)
-      .then(res => {
-        // If we have localStorage.getItem('user') saved, the application will consider we are loggedin
-        localStorage.setItem('user', JSON.stringify(res.data))
-        return res.data
-      })
-      .catch(errHandler)
-  },
-
-  login(username, password) {
-    return service
-      .post('/login', {
-        username,
-        password,
-      })
-      .then(res => {
-        // If we have localStorage.getItem('user') saved, the application will consider we are loggedin
-        localStorage.setItem('user', JSON.stringify(res.data))
-        return res.data
-      })
-      .catch(errHandler)
-  },
-
-  logout() {
-    localStorage.removeItem('user')
-    return service
-      .get('/logout')
-  },
-
-  getCountries() {
-    return service
-      .get('/countries')
+      .get('/questions')
       .then(res => res.data)
       .catch(errHandler)
   },
 
-  addCountry(body) {
+  addQuestion(body) {
     return service
-      .post('/countries', body)
-      .then(res => res.data)
-      .catch(errHandler)
-  },
-
-  getSecret() {
-    return service
-      .get('/secret')
+      .post('/questions', body)
       .then(res => res.data)
       .catch(errHandler)
   },

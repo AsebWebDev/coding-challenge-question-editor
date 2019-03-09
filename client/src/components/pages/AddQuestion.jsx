@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import api from '../../api';
 
-export default class Signup extends Component {
+
+export default class AddQuestion extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      username: "",
       name: "",
-      password: "",
+      capitals: "",
+      area: "",
+      description: "",
       message: null
     }
     this.handleInputChange = this.handleInputChange.bind(this)
@@ -21,30 +23,35 @@ export default class Signup extends Component {
 
   handleClick(e) {
     e.preventDefault()
+    console.log(this.state.name, this.state.description)
     let data = {
-      username: this.state.username,
       name: this.state.name,
-      password: this.state.password,
+
     }
-    api.signup(data)
+    api.addQuesions(data)
       .then(result => {
         console.log('SUCCESS!')
-        this.props.history.push("/") // Redirect to the home page
+        this.setState({
+          name: "",
+          message: `Your Question '${this.state.name}' has been created`
+        })
+        setTimeout(() => {
+          this.setState({
+            message: null
+          })
+        }, 2000)
       })
       .catch(err => this.setState({ message: err.toString() }))
   }
-
   render() {
     return (
-      <div className="Signup">
-        <h2>Signup</h2>
+      <div className="AddQuestion">
+        <h2>Add Question</h2>
         <form>
-          Username: <input type="text" value={this.state.username} name="username" onChange={this.handleInputChange} /> <br />
           Name: <input type="text" value={this.state.name} name="name" onChange={this.handleInputChange} /> <br />
-          Password: <input type="password" value={this.state.password} name="password" onChange={this.handleInputChange} /> <br />
-          <button onClick={(e) => this.handleClick(e)}>Signup</button>
+          <button onClick={(e) => this.handleClick(e)}>Create Question</button>
         </form>
-        {this.state.message && <div className="info info-danger">
+        {this.state.message && <div className="info">
           {this.state.message}
         </div>}
       </div>
