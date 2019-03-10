@@ -39,9 +39,7 @@ export default class QuestionDetail extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     api.editQuestion(this.props.match.params.questionId, this.state.question)
-      .then(data => {
-				console.log('TCL: QuestionDetail -> handleSubmit -> data', data)
-        
+      .then(data => {        
         this.setState({
           question: data.question,
           message: data.success
@@ -58,11 +56,22 @@ export default class QuestionDetail extends Component {
   }
 
   addCol = (event) => {
-    console.log("addCol called")
     event.preventDefault();
     let newQuestion = this.state.question;
     newQuestion.rows.map((row, i) => row.col.push(false));
     newQuestion.colTitles.push("Col"+(newQuestion.colTitles.length+1))
+    this.setState({
+      question: newQuestion
+    })
+  }
+
+  addRow = (event) => {
+    event.preventDefault();
+    let newQuestion = this.state.question;
+    let newTitle = "Row"+(newQuestion.rows.length+1);
+    let newRow = {col:[], title: newTitle};
+    for (let i = 0; i < newQuestion.colTitles.length; i++) newRow.col.push(false);
+    newQuestion.rows.push(newRow)
     this.setState({
       question: newQuestion
     })
@@ -112,7 +121,11 @@ export default class QuestionDetail extends Component {
                   )}
                 </tr>
               )}
-              <th><PicBox pic="https://cdn3.iconfinder.com/data/icons/glypho-generic-icons/64/plus-big-512.png"/></th> 
+              <th>
+                <Link to="#" onClick={e => this.addRow(e)}>
+                  <PicBox pic="https://cdn3.iconfinder.com/data/icons/glypho-generic-icons/64/plus-big-512.png"/>
+                </Link>
+              </th> 
               {/* FIXME: Error in Console "Text nodes cannot appear as a child of..." */}
               
             </MDBTableBody>
