@@ -36,7 +36,10 @@ router.post('/:id', (req, res, next) => {
   console.log(req.body)
   Question.findByIdAndUpdate(req.params.id, req.body)
   .then(question => {
-    console.log(question)
+    res.json({
+      success: true,
+      question
+    });
   })
   .catch(err => console.log(err))
 });

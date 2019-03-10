@@ -8,6 +8,7 @@ export default class QuestionDetail extends Component {
     super(props)
     this.state = {
       question: null,
+      message: null
     }
   }
 
@@ -19,22 +20,33 @@ export default class QuestionDetail extends Component {
     })
   };
 
-  handleChange = (event, direction) => {  
+  handleChange = (event, key) => {  
     let index = event.target.name;
     let newQuestion = this.state.question;
-    (direction === "col")  
-    ? newQuestion.colTitles[index] = event.target.value
-    : newQuestion.rows[index].title = event.target.value;
+    (key === "title")
+    ? newQuestion.title = event.target.value
+    :(key === "col")  
+      ? newQuestion.colTitles[index] = event.target.value
+      : newQuestion.rows[index].title = event.target.value;
     this.setState({question: newQuestion});
   }
 
   handleSubmit = (event) => {
     event.preventDefault();
     api.editQuestion(this.props.match.params.questionId, this.state.question)
-      .then(question => {
+      .then(data => {
+				console.log('TCL: QuestionDetail -> handleSubmit -> data', data)
+        
         this.setState({
-          question: question,
+          question: data.question,
+          message: data.success
         })
+
+        setTimeout(() => {
+          this.setState({
+            message: null
+          });
+        }, 3000);
       })
       .catch(err => console.log(err))
   }
@@ -44,14 +56,15 @@ export default class QuestionDetail extends Component {
     ? (
       <MDBContainer className="QuestionDetail">
         <form onSubmit={e => this.handleSubmit(e)}>
-          <h2>{this.state.title}</h2>
+          {/* <h2>{this.state.title}</h2> */}
+          <input className="input-lg" type="text" name="title" value={this.state.question.title} onChange={e => this.handleChange(e, "title")} /> 
           <MDBTable>
             <MDBTableHead>
               <tr>
                 <th>#</th>
                 {this.state.question.colTitles.map((colTitle, i) => 
                   <th key={i}>
-                  <input type="text" name={i} value={colTitle} onChange={e => this.handleChange(e, "col")} /> 
+                  <input className="input-sm" type="text" name={i} value={colTitle} onChange={e => this.handleChange(e, "col")} /> 
                   </th>
                 )}
               </tr>
@@ -61,7 +74,7 @@ export default class QuestionDetail extends Component {
                 <tr key={i}>
                   <td>
                   {/* {row.title} */}
-                  <input type="text" name={i} value={row.title} onChange={e => this.handleChange(e, "row")} /> 
+                  <input className="input-sm" type="text" name={i} value={row.title} onChange={e => this.handleChange(e, "row")} /> 
                   </td>
                   {row.col.map((col, j) => 
                     <td key={j}><RadioButton rowIndex={i} colIndex= {j} checked={col} handleRadioButtonClick={this.handleRadioButtonClick}/></td>
@@ -73,6 +86,7 @@ export default class QuestionDetail extends Component {
           </MDBTable>
           <MDBBtn type="submit" color="success">Change</MDBBtn>
         </form>
+      {this.state.message && <div className="info">Success!</div>}
       </MDBContainer>
     )
     :(<div></div>);
