@@ -1,4 +1,8 @@
+// FIXME: Overlapping screen, when adding too many columns
+
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+
 import { MDBContainer, MDBTable, MDBTableHead, MDBTableBody, MDBBtn} from 'mdbreact';
 import RadioButton from '../RadioButton';
 import PicBox from '../PicBox';
@@ -52,12 +56,22 @@ export default class QuestionDetail extends Component {
       .catch(err => console.log(err))
   }
 
+  addCol = (event) => {
+    console.log("addCol called")
+    event.preventDefault();
+    let newQuestion = this.state.question;
+    newQuestion.rows.map((row, i) => row.col.push(false));
+    newQuestion.colTitles.push("Col"+(newQuestion.colTitles.length+1))
+    this.setState({
+      question: newQuestion
+    })
+  }
+
   render() {
     return this.state.question 
     ? (
       <MDBContainer className="QuestionDetail">
         <form onSubmit={e => this.handleSubmit(e)}>
-          {/* <h2>{this.state.title}</h2> */}
           <input className="input-lg" type="text" name="title" value={this.state.question.title} onChange={e => this.handleChange(e, "title")} /> 
           <MDBTable>
             <MDBTableHead>
@@ -78,7 +92,11 @@ export default class QuestionDetail extends Component {
                   <input className="input-sm" type="text" name={i} value={colTitle} onChange={e => this.handleChange(e, "col")} /> 
                   </th>
                 )}
-                <th><PicBox pic="https://cdn3.iconfinder.com/data/icons/glypho-generic-icons/64/plus-big-512.png"/></th>
+                <th>
+                  <Link to="#" onClick={e => this.addCol(e)}> 
+                    <PicBox pic="https://cdn3.iconfinder.com/data/icons/glypho-generic-icons/64/plus-big-512.png"/>
+                  </Link>
+                </th>
               </tr>
             </MDBTableHead>
             <MDBTableBody>
