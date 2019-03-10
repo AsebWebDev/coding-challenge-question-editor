@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { MDBContainer, MDBTable, MDBTableHead, MDBTableBody, MDBBtn} from 'mdbreact';
 import RadioButton from '../RadioButton';
+import PicBox from '../PicBox';
 import api from '../../api';
 
 export default class QuestionDetail extends Component {
@@ -61,26 +62,40 @@ export default class QuestionDetail extends Component {
           <MDBTable>
             <MDBTableHead>
               <tr>
-                <th>#</th>
+                <td></td>
+                <td></td>
+                {this.state.question.colTitles.map((colTitle, i) => 
+                  <td key={i}>
+                  <PicBox pic="https://static.thenounproject.com/png/396915-200.png"/>
+                  </td>
+                )}
+              </tr>
+              <tr>
+                <th></th>
+                <th></th>
                 {this.state.question.colTitles.map((colTitle, i) => 
                   <th key={i}>
                   <input className="input-sm" type="text" name={i} value={colTitle} onChange={e => this.handleChange(e, "col")} /> 
                   </th>
                 )}
+                <th><PicBox pic="https://cdn3.iconfinder.com/data/icons/glypho-generic-icons/64/plus-big-512.png"/></th>
               </tr>
             </MDBTableHead>
             <MDBTableBody>
               {this.state.question.rows.map((row, i) => 
                 <tr key={i}>
+                  <td><PicBox pic="https://static.thenounproject.com/png/396915-200.png"/></td>
                   <td>
-                  {/* {row.title} */}
-                  <input className="input-sm" type="text" name={i} value={row.title} onChange={e => this.handleChange(e, "row")} /> 
+                    <input className="input-sm" type="text" name={i} value={row.title} onChange={e => this.handleChange(e, "row")} /> 
                   </td>
                   {row.col.map((col, j) => 
                     <td key={j}><RadioButton rowIndex={i} colIndex= {j} checked={col} handleRadioButtonClick={this.handleRadioButtonClick}/></td>
                   )}
                 </tr>
               )}
+              <th><PicBox pic="https://cdn3.iconfinder.com/data/icons/glypho-generic-icons/64/plus-big-512.png"/></th> 
+              {/* FIXME: Error in Console "Text nodes cannot appear as a child of..." */}
+              
             </MDBTableBody>
 
           </MDBTable>
