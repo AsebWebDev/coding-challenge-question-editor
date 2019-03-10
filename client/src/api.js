@@ -31,6 +31,13 @@ export default {
       .catch(errHandler)
   },
 
+  editQuestion(id, question) {
+    return service
+      .post('/questions/'+id, question)
+      .then(res => res.data)
+      .catch(errHandler)
+  },
+
   addQuestion(body) {
     return service
       .post('/questions', body)

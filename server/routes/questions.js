@@ -32,4 +32,13 @@ router.post('/', (req, res, next) => {
     .catch(err => next(err))
 });
 
+router.post('/:id', (req, res, next) => {
+  console.log(req.body)
+  Question.findByIdAndUpdate(req.params.id, req.body)
+  .then(question => {
+    console.log(question)
+  })
+  .catch(err => console.log(err))
+});
+
 module.exports = router;

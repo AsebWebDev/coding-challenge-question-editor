@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { MDBContainer, MDBTable, MDBTableHead, MDBTableBody} from 'mdbreact';
+import { MDBContainer, MDBTable, MDBTableHead, MDBTableBody, MDBBtn} from 'mdbreact';
 import RadioButton from '../RadioButton';
 import api from '../../api';
 
@@ -28,37 +28,51 @@ export default class QuestionDetail extends Component {
     this.setState({question: newQuestion});
   }
 
+  handleSubmit = (event) => {
+    event.preventDefault();
+    api.editQuestion(this.props.match.params.questionId, this.state.question)
+      .then(question => {
+        this.setState({
+          question: question,
+        })
+      })
+      .catch(err => console.log(err))
+  }
 
   render() {
     return this.state.question 
     ? (
       <MDBContainer className="QuestionDetail">
-        <h2>{this.state.title}</h2>
-        <MDBTable>
-          <MDBTableHead>
-            <tr>
-              <th>#</th>
-              {this.state.question.colTitles.map((colTitle, i) => 
-                <th key={i}>
-                <input type="text" name={i} value={colTitle} onChange={e => this.handleChange(e, "col")} /> 
-                </th>
-              )}
-            </tr>
-          </MDBTableHead>
-          <MDBTableBody>
-            {this.state.question.rows.map((row, i) => 
-              <tr key={i}>
-                <td>
-                {/* {row.title} */}
-                <input type="text" name={i} value={row.title} onChange={e => this.handleChange(e, "row")} /> 
-                </td>
-                {row.col.map((col, j) => 
-                  <td key={j}><RadioButton rowIndex={i} colIndex= {j} checked={col} handleRadioButtonClick={this.handleRadioButtonClick}/></td>
+        <form onSubmit={e => this.handleSubmit(e)}>
+          <h2>{this.state.title}</h2>
+          <MDBTable>
+            <MDBTableHead>
+              <tr>
+                <th>#</th>
+                {this.state.question.colTitles.map((colTitle, i) => 
+                  <th key={i}>
+                  <input type="text" name={i} value={colTitle} onChange={e => this.handleChange(e, "col")} /> 
+                  </th>
                 )}
               </tr>
-            )}
-          </MDBTableBody>
-        </MDBTable>
+            </MDBTableHead>
+            <MDBTableBody>
+              {this.state.question.rows.map((row, i) => 
+                <tr key={i}>
+                  <td>
+                  {/* {row.title} */}
+                  <input type="text" name={i} value={row.title} onChange={e => this.handleChange(e, "row")} /> 
+                  </td>
+                  {row.col.map((col, j) => 
+                    <td key={j}><RadioButton rowIndex={i} colIndex= {j} checked={col} handleRadioButtonClick={this.handleRadioButtonClick}/></td>
+                  )}
+                </tr>
+              )}
+            </MDBTableBody>
+
+          </MDBTable>
+          <MDBBtn type="submit" color="success">Change</MDBBtn>
+        </form>
       </MDBContainer>
     )
     :(<div></div>);
