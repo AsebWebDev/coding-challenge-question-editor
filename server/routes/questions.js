@@ -34,7 +34,7 @@ router.post('/', (req, res, next) => {
 
 router.post('/:id', (req, res, next) => {
   console.log(req.body)
-  Question.findByIdAndUpdate(req.params.id, req.body)
+  Question.findByIdAndUpdate(req.params.id, req.body, { new: true })
   .then(question => {
     res.json({
       success: true,

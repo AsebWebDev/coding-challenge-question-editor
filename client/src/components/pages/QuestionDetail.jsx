@@ -49,6 +49,7 @@ export default class QuestionDetail extends Component {
 
         setTimeout(() => {
           this.setState({
+            question: data.question,
             message: null
           });
         }, 3000);
