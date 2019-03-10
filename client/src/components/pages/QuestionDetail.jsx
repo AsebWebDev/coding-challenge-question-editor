@@ -108,6 +108,13 @@ export default class QuestionDetail extends Component {
     }, 3000);
   }
 
+  handleFileUploadClick = (e) => {
+    e.preventDefault();  
+    this.setState({
+      fileUploadClicked: !this.state.fileUploadClicked
+    })
+  }
+
   render() {
     return this.state.question 
     ? (
@@ -128,7 +135,9 @@ export default class QuestionDetail extends Component {
                 <td></td>
                 {this.state.question.colTitles.map((colTitle, i) => 
                   <td key={i}>
-                  <PicBox pic="https://static.thenounproject.com/png/396915-200.png"/>
+                  <Link to="#" onClick={e => this.handleFileUploadClick(e)}>
+                    <PicBox pic="https://static.thenounproject.com/png/396915-200.png"/>
+                  </Link>
                   </td>
                 )}
               </tr>
@@ -150,7 +159,7 @@ export default class QuestionDetail extends Component {
             <MDBTableBody>
               {this.state.question.rows.map((row, i) => 
                 <tr key={i}>
-                  <td><PicBox pic="https://static.thenounproject.com/png/396915-200.png"/></td>
+                  <td><Link to="#" onClick={e => this.handleFileUploadClick(e)}><PicBox pic="https://static.thenounproject.com/png/396915-200.png"/></Link></td>
                   <td>
                     <input className="input-sm" type="text" name={i} value={row.title} onChange={e => this.handleChange(e, "row")} /> 
                   </td>
