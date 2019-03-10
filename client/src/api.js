@@ -47,9 +47,9 @@ export default {
 
   addPicture(file) {
     const formData = new FormData()
-    formData.append("picture", file)
+    formData.append("file", file)
     return service
-      .post('/endpoint/to/add/a/picture', formData, {
+      .post('/questions/add-picture', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

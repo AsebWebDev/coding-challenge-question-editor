@@ -15,6 +15,17 @@ body {
   height: 30px;
 }
 
+#fileupload {
+  border: 2px solid grey;
+  border-radius: 5px;
+  margin: 20px;
+}
+
+#fileupload img {
+  width: 50px;
+  height: 50px;
+}
+
 .input-sm {
   width: 80px;
 }

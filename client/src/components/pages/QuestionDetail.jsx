@@ -13,7 +13,10 @@ export default class QuestionDetail extends Component {
     super(props)
     this.state = {
       question: null,
-      message: null
+      message: null,
+      fileForUpload: null,      
+      picturePreview: null,
+      fileUploadClicked: false
     }
   }
 
@@ -40,9 +43,10 @@ export default class QuestionDetail extends Component {
     event.preventDefault();
     api.editQuestion(this.props.match.params.questionId, this.state.question)
       .then(data => {        
+				console.log('TCL: QuestionDetail -> handleSubmit -> data', data)
         this.setState({
           question: data.question,
-          message: data.success
+          message: data.message
         })
 
         setTimeout(() => {
@@ -77,10 +81,44 @@ export default class QuestionDetail extends Component {
     })
   }
 
+  handleFileUploadChange = (e) => {
+    e.preventDefault();  
+    const file = e.target.files[0];
+    this.setState({
+      fileForUpload: file,
+      picturePreview: URL.createObjectURL(file)
+    })
+  }
+
+  handleFileUpload = (e) => {
+    e.preventDefault();  
+    if (this.state.fileForUpload) {
+      api.addPicture(this.state.fileForUpload)
+        .then(data => {
+          this.setState({message: "Upload Successfull!"})
+        })
+        .catch(err => console.log(err))
+    } else {
+      this.setState({message: "please choose a file"})
+    }
+    setTimeout(() => {
+      this.setState({
+        message: null
+      });
+    }, 3000);
+  }
+
   render() {
     return this.state.question 
     ? (
       <MDBContainer className="QuestionDetail">
+        {this.state.fileUploadClicked && 
+          <form id="fileupload" onSubmit={e => this.handleFileUpload(e)}>
+            <input type="file" onChange={e => this.handleFileUploadChange(e)}/><MDBBtn color="primary">send</MDBBtn>
+            {this.state.picturePreview && <img src={this.state.picturePreview} alt="uploadedpicture" />}
+          </form>
+        }
+
         <form onSubmit={e => this.handleSubmit(e)}>
           <input className="input-lg" type="text" name="title" value={this.state.question.title} onChange={e => this.handleChange(e, "title")} /> 
           <MDBTable>
@@ -133,7 +171,7 @@ export default class QuestionDetail extends Component {
           </MDBTable>
           <MDBBtn type="submit" color="success">Change</MDBBtn>
         </form>
-      {this.state.message && <div className="info">Success!</div>}
+      {this.state.message && <div className="info">{this.state.message}</div>}
       </MDBContainer>
     )
     :(<div></div>);
