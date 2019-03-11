@@ -45,9 +45,12 @@ export default {
       .catch(errHandler)
   },
 
-  addPicture(file) {
+  addPicture(file, index, direction, questionId) {
     const formData = new FormData()
     formData.append("file", file)
+    formData.append("index", index)
+    formData.append("direction", direction)
+    formData.append("questionId", questionId)
     return service
       .post('/questions/add-picture', formData, {
         headers: {

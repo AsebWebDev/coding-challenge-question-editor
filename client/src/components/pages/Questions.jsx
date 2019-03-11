@@ -12,7 +12,6 @@ export default class Questions extends Component {
   render() {
     return (
       <div className="Questions">
-        <h2>List of Questions</h2>
         {this.state.questions.map(c => 
           <li key={c._id}><Link to={"/questions/" + c._id}>{c.title}</Link></li>
         )}

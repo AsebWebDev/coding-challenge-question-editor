@@ -6,11 +6,27 @@ const questionSchema = new mongoose.Schema({
     required: [true, 'The question name is required'],
     minlength: 1
   },
-  colTitles: [String],
+  cols: [
+    {
+      title: {type: String},
+      picture: {
+        type: String,
+        default: "https://static.thenounproject.com/png/396915-200.png"
+      },
+    }
+  ],
+
   rows: [
       {
         title: {type: String},
-        col: [ Boolean ] //TODO: Make false as default
+        picture: {
+          type: String,
+          default: "https://static.thenounproject.com/png/396915-200.png"
+        },
+        col: [ {
+          type: Boolean,
+          default: false
+        }  ] 
       }
   ]
 });

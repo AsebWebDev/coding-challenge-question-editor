@@ -4,9 +4,11 @@ const Question = require('../models/Question')
 const router = express.Router();
 
 const storage = multer.diskStorage({
-  destination: './files',
+  destination: function (req, file, cb) {
+    cb(null, './files')
+  },
   filename(req, file, cb) {
-    cb(null, `${new Date()}-${file.originalname}`);
+    cb(null, `${file.originalname}`);
   },
 });
 const upload = multer({ storage });
@@ -14,7 +16,6 @@ const upload = multer({ storage });
 router.get('/', (req, res, next) => {
   Question.find()
     .then(questions => {
-			console.log('TCL: questions', questions)
       res.json(questions);
     })
     .catch(err => next(err))
@@ -43,6 +44,17 @@ router.post('/', (req, res, next) => {
 router.post('/add-picture', upload.single('file'), (req, res, next) => {
   console.log("Post Add Picture hit")
   console.log(req.file.path)
+  const {index, direction, questionId} = req.body;
+  let newQuestion;
+  Question.findById(questionId)
+  .then(question => {
+    if (direction === "row") question.rows[index].picture = req.file.path; //FIXME: how to store path to image on server in mongo?
+    else question.cols[index].picture = req.file.path;                     //FIXME: how to store path to image on server in mongo?
+    newQuestion = question;
+  })
+  .then (() => Question.findByIdAndUpdate(questionId, newQuestion, { new: true }))
+  .catch(err => next(err))
+
   res.json({
     message: "File has been uploaded!",
   });

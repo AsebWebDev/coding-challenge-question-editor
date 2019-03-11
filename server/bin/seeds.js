@@ -9,7 +9,7 @@ require('../configs/database')
 let questions = [
   {
     title: "Question 1",
-    colTitles: ["Col1", "Col2", "Col3", "Col4"],
+    cols: [{title: "Col1"}, {title: "Col2"}, {title: "Col3"}, {title: "Col4"}],
     rows: [
       {
         title: "Row1",

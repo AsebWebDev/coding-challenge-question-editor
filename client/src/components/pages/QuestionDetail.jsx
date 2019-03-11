@@ -3,10 +3,9 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
-import { MDBContainer, MDBTable, MDBTableHead, MDBTableBody, MDBBtn} from 'mdbreact';
-import RadioButton from '../RadioButton';
+import { MDBContainer, MDBTable, MDBTableHead, MDBTableBody, MDBBtn, MDBAnimation} from 'mdbreact';
+import Row from '../Row';
 import PicBox from '../PicBox';
-import PicUpload from '../PicUpload';
 
 import api from '../../api';
 
@@ -17,18 +16,13 @@ export default class QuestionDetail extends Component {
       question: null,
       message: null,
       fileForUpload: null,      
-      // picturePreview: null,
-      fileUploadClicked: false
+      picturePreview: null,
+      fileUploadClicked: false,
+      fileUploadClickedDirection: '',
+      fileUploadClickedIndex: null
     }
   }
 
-  handleRadioButtonClick = (e, rowIndex, colIndex) => {
-    let newQuestion = this.state.question;
-    newQuestion.rows[rowIndex].col[colIndex] = !newQuestion.rows[rowIndex].col[colIndex];
-    this.setState({
-      question: newQuestion
-    })
-  };
 
   handleChange = (event, key) => {  
     let index = event.target.name;
@@ -36,7 +30,7 @@ export default class QuestionDetail extends Component {
     (key === "title")
     ? newQuestion.title = event.target.value
     :(key === "col")  
-      ? newQuestion.colTitles[index] = event.target.value
+      ? newQuestion.cols[index].title = event.target.value
       : newQuestion.rows[index].title = event.target.value;
     this.setState({question: newQuestion});
   }
@@ -65,37 +59,73 @@ export default class QuestionDetail extends Component {
     event.preventDefault();
     let newQuestion = this.state.question;
     newQuestion.rows.map((row, i) => row.col.push(false));
-    newQuestion.colTitles.push("Col"+(newQuestion.colTitles.length+1))
-    this.setState({
-      question: newQuestion
+    newQuestion.cols.push({
+      title: "Col"+(newQuestion.cols.length+1),
+      picture: "https://static.thenounproject.com/png/396915-200.png"
     })
+    this.setState({ question: newQuestion })
   }
 
   addRow = (event) => {
     event.preventDefault();
     let newQuestion = this.state.question;
     let newTitle = "Row"+(newQuestion.rows.length+1);
-    let newRow = {col:[], title: newTitle};
-    for (let i = 0; i < newQuestion.colTitles.length; i++) newRow.col.push(false);
+    let newRow = {col:[], title: newTitle, picture: "https://static.thenounproject.com/png/396915-200.png"};
+    for (let i = 0; i < newQuestion.cols.length; i++) newRow.col.push(false);
     newQuestion.rows.push(newRow)
+    this.setState({ question: newQuestion })
+  }
+
+  handleFileUploadClick = (e, i, direction) => {
+    e.preventDefault();  
     this.setState({
-      question: newQuestion
+      fileUploadClicked: !this.state.fileUploadClicked,
+      fileUploadClickedDirection: direction,
+      fileUploadClickedIndex: i
     })
   }
 
-  handleFileUploadClick = (e) => {
+  handleFileUploadChange = (e) => {
     e.preventDefault();  
+    const file = e.target.files[0];
     this.setState({
-      fileUploadClicked: !this.state.fileUploadClicked
+      fileForUpload: file,
+      picturePreview: URL.createObjectURL(file)
     })
+  }
+  
+  handleFileUpload = (e) => {
+    let file = this.state.fileForUpload;
+    let index = this.state.fileUploadClickedIndex;
+    let direction = this.state.fileUploadClickedDirection;
+    let questionId = this.props.match.params.questionId;
+    e.preventDefault();  
+    if (this.state.fileForUpload) {
+      api.addPicture(file, index, direction, questionId)
+        .then(data => {
+          this.setState({message: "Upload Successfull!"})
+        })
+        .catch(err => console.log(err))
+    } else this.setState({message: "please choose a file"});
+  
+    setTimeout(() => {
+      this.setState({ message: null });
+    }, 3000);
   }
 
   render() {
     return this.state.question 
     ? (
       <MDBContainer className="QuestionDetail">
-         {this.state.fileUploadClicked && <PicUpload fileForUpload={this.state.fileForUpload} handleSubmit={this.handleSubmit}/>}
-
+        {this.state.fileUploadClicked && 
+          <MDBAnimation type="slideInLeft">
+            <form id="fileupload" onSubmit={e => this.handleFileUpload(e)}>
+              <input type="file" onChange={e => this.handleFileUploadChange(e)}/>
+              {this.state.picturePreview && <img src={this.state.picturePreview} alt="uploadedpicture" />}
+              <MDBBtn type="submit" color="primary">send</MDBBtn>
+            </form> 
+          </MDBAnimation>  
+        }
         <form onSubmit={e => this.handleSubmit(e)}>
           <input className="input-lg" type="text" name="title" value={this.state.question.title} onChange={e => this.handleChange(e, "title")} /> 
           <MDBTable>
@@ -103,10 +133,10 @@ export default class QuestionDetail extends Component {
               <tr>
                 <td></td>
                 <td></td>
-                {this.state.question.colTitles.map((colTitle, i) => 
+                {this.state.question.cols.map((col, i) => 
                   <td key={i}>
-                  <Link to="#" onClick={e => this.handleFileUploadClick(e)}>
-                    <PicBox pic="https://static.thenounproject.com/png/396915-200.png"/>
+                  <Link to="#" onClick={e => this.handleFileUploadClick(e, i, 'col')}>
+                    <PicBox pic={col.picture}/>
                   </Link>
                   </td>
                 )}
@@ -114,9 +144,9 @@ export default class QuestionDetail extends Component {
               <tr>
                 <th></th>
                 <th></th>
-                {this.state.question.colTitles.map((colTitle, i) => 
+                {this.state.question.cols.map((col, i) => 
                   <th key={i}>
-                  <input className="input-sm" type="text" name={i} value={colTitle} onChange={e => this.handleChange(e, "col")} /> 
+                  <input className="input-sm" type="text" name={i} value={col.title} onChange={e => this.handleChange(e, "col")} /> 
                   </th>
                 )}
                 <th>
@@ -128,25 +158,15 @@ export default class QuestionDetail extends Component {
             </MDBTableHead>
             <MDBTableBody>
               {this.state.question.rows.map((row, i) => 
-                <tr key={i}>
-                  <td><Link to="#" onClick={e => this.handleFileUploadClick(e)}><PicBox pic="https://static.thenounproject.com/png/396915-200.png"/></Link></td>
-                  <td>
-                    <input className="input-sm" type="text" name={i} value={row.title} onChange={e => this.handleChange(e, "row")} /> 
-                  </td>
-                  {row.col.map((col, j) => 
-                    <td key={j}><RadioButton rowIndex={i} colIndex= {j} checked={col} handleRadioButtonClick={this.handleRadioButtonClick}/></td>
-                  )}
-                </tr>
+                <Row i={i} handleChange={this.handleChange} handleFileUploadClick={this.handleFileUploadClick} row={row}/>
               )}
               <th>
                 <Link to="#" onClick={e => this.addRow(e)}>
                   <PicBox pic="https://cdn3.iconfinder.com/data/icons/glypho-generic-icons/64/plus-big-512.png"/>
                 </Link>
               </th> 
-              {/* FIXME: Error in Console "Text nodes cannot appear as a child of..." */}
-              
+              {/* FIXME: Error in Console "Text nodes cannot appear as a child of..." */}      
             </MDBTableBody>
-
           </MDBTable>
           <MDBBtn type="submit" color="success">Change</MDBBtn>
         </form>
@@ -158,9 +178,7 @@ export default class QuestionDetail extends Component {
   componentDidMount() {
     api.getQuestion(this.props.match.params.questionId)
       .then(question => {
-        this.setState({
-          question: question,
-        })
+        this.setState({ question: question })
       })
       .catch(err => console.log(err))
   }
