@@ -96,6 +96,17 @@ router.post('/:id', (req, res, next) => {
   .catch(err => console.log(err))
 });
 
+router.delete('/:id', (req,res,next)=>{
+  Question.findByIdAndDelete(req.params.id)
+    .then(question => {
+      res.json({
+        message: "The question was deleted",
+        question: question // The deleted question is sent
+      })
+    })
+    .catch(err => next(err))
+})
+
 
 
 module.exports = router;

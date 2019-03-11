@@ -31,6 +31,13 @@ export default {
       .catch(errHandler)
   },
 
+  deleteQuestion(id) {
+    return service
+      .delete('/questions/'+id)
+      .then(res => res.data)
+      .catch(errHandler)
+  },
+
   editQuestion(id, question) {
     return service
       .post('/questions/'+id, question)
