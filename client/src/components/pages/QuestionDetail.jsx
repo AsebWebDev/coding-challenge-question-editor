@@ -161,7 +161,7 @@ export default class QuestionDetail extends Component {
             </MDBTableHead>
             <MDBTableBody>
               {this.state.question.rows.map((row, i) => 
-                <Row key={i} i={i} handleChange={this.handleChange} handleFileUploadClick={this.handleFileUploadClick} row={row}/>
+                <Row key={i} i={i} question={this.state.question} handleChange={this.handleChange} handleFileUploadClick={this.handleFileUploadClick} row={row}/>
               )}
               <th>
                 <Link to="#" onClick={e => this.addRow(e)}>

@@ -14,7 +14,7 @@ constructor(props) {
 }
 
 handleRadioButtonClick = (e, rowIndex, colIndex) => {
-  let newQuestion = this.state.question;
+  let newQuestion = this.props.question;
   newQuestion.rows[rowIndex].col[colIndex] = !newQuestion.rows[rowIndex].col[colIndex];
   this.setState({ question: newQuestion })
 };
