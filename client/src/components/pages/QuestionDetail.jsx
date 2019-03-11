@@ -131,7 +131,7 @@ export default class QuestionDetail extends Component {
           </MDBAnimation>  
         }
         <form onSubmit={e => this.handleSubmit(e)}>
-          <input className="input-lg" type="text" name="title" value={this.state.question.title} onChange={e => this.handleChange(e, "title")} /> 
+          <input id="title" className="input-lg" type="text" name="title" value={this.state.question.title} onChange={e => this.handleChange(e, "title")} /> 
           <MDBTable>
             <MDBTableHead>
               <tr>

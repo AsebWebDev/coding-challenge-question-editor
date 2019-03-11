@@ -6,13 +6,8 @@ export default class AddQuestion extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      name: "",
-      capitals: "",
-      area: "",
-      description: "",
-      message: null
+      title: "",
     }
-    this.handleInputChange = this.handleInputChange.bind(this)
   }
 
   handleInputChange(event) {
@@ -23,17 +18,15 @@ export default class AddQuestion extends Component {
 
   handleClick(e) {
     e.preventDefault()
-    console.log(this.state.name, this.state.description)
     let data = {
-      name: this.state.name,
-
+      title: this.state.title,
     }
-    api.addQuesions(data)
+    api.addQuestion(data)
       .then(result => {
         console.log('SUCCESS!')
         this.setState({
-          name: "",
-          message: `Your Question '${this.state.name}' has been created`
+          title: "",
+          message: `Your Question '${this.state.title}' has been created`
         })
         setTimeout(() => {
           this.setState({
@@ -48,7 +41,7 @@ export default class AddQuestion extends Component {
       <div className="AddQuestion">
         <h2>Add Question</h2>
         <form>
-          Name: <input type="text" value={this.state.name} name="name" onChange={this.handleInputChange} /> <br />
+          Title: <input type="text" value={this.state.title} name="title" onChange={e => this.handleInputChange(e)} /> <br />
           <button onClick={(e) => this.handleClick(e)}>Create Question</button>
         </form>
         {this.state.message && <div className="info">

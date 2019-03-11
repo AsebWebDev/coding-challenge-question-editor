@@ -30,8 +30,33 @@ router.get('/:id', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-  let { title } = req.body
-  Question.create({ title })
+  let { title } = req.body;
+  let newQuestion = [
+    {
+      title,
+      cols: [{title: "Col1"}, {title: "Col2"}, {title: "Col3"}, {title: "Col4"}],
+      rows: [
+        {
+          title: "Row1",
+          col: [false, false, false, false]
+        },
+        {
+          title: "Row2",
+          col: [false, false, false, false]
+        },
+        {
+          title: "Row3",
+          col: [false, false, false, false]
+        },
+        {
+          title: "Row4",
+          col: [false, false, false, false]
+        },
+      ]
+    }
+  ]
+
+  Question.create(newQuestion)
     .then(question => {
       res.json({
         message: "Success!",
