@@ -2,11 +2,10 @@
 
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-
 import { MDBContainer, MDBTable, MDBTableHead, MDBTableBody, MDBBtn, MDBAnimation} from 'mdbreact';
 import Row from '../Row';
 import PicBox from '../PicBox';
-
+import Statistics from './Statistics';
 import api from '../../api';
 
 export default class QuestionDetail extends Component {
@@ -19,7 +18,8 @@ export default class QuestionDetail extends Component {
       picturePreview: null,
       fileUploadClicked: false,
       fileUploadClickedDirection: '',
-      fileUploadClickedIndex: null
+      fileUploadClickedIndex: null,
+      imageCounter: 0
     }
   }
 
@@ -103,7 +103,10 @@ export default class QuestionDetail extends Component {
     if (this.state.fileForUpload) {
       api.addPicture(file, index, direction, questionId)
         .then(data => {
-          this.setState({message: "Upload Successfull!"})
+          this.setState({
+            message: "Upload Successfull!",
+            imageCounter: this.state.imageCounter + 1
+          })
         })
         .catch(err => console.log(err))
     } else this.setState({message: "please choose a file"});
@@ -116,7 +119,8 @@ export default class QuestionDetail extends Component {
   render() {
     return this.state.question 
     ? (
-      <MDBContainer className="QuestionDetail">
+      <MDBContainer className="QuestionDetail d-flex flex-row">
+      <div className="left">
         {this.state.fileUploadClicked && 
           <MDBAnimation type="slideInLeft">
             <form id="fileupload" onSubmit={e => this.handleFileUpload(e)}>
@@ -158,7 +162,7 @@ export default class QuestionDetail extends Component {
             </MDBTableHead>
             <MDBTableBody>
               {this.state.question.rows.map((row, i) => 
-                <Row i={i} handleChange={this.handleChange} handleFileUploadClick={this.handleFileUploadClick} row={row}/>
+                <Row key={i} i={i} handleChange={this.handleChange} handleFileUploadClick={this.handleFileUploadClick} row={row}/>
               )}
               <th>
                 <Link to="#" onClick={e => this.addRow(e)}>
@@ -170,7 +174,11 @@ export default class QuestionDetail extends Component {
           </MDBTable>
           <MDBBtn type="submit" color="success">Change</MDBBtn>
         </form>
-      {this.state.message && <div className="info">{this.state.message}</div>}
+        {this.state.message && <div className="info">{this.state.message}</div>}
+      </div>
+
+      <Statistics question={this.state.question} counter={this.state.imageCounter}/>
+
       </MDBContainer>
     )
     :(<div></div>);
