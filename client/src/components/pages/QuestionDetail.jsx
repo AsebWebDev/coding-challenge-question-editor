@@ -39,7 +39,6 @@ export default class QuestionDetail extends Component {
     event.preventDefault();
     api.editQuestion(this.props.match.params.questionId, this.state.question)
       .then(data => {        
-				console.log('TCL: QuestionDetail -> handleSubmit -> data', data)
         this.setState({
           question: data.question,
           message: data.message
