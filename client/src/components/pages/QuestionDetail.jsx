@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import { MDBContainer, MDBTable, MDBTableHead, MDBTableBody, MDBBtn} from 'mdbreact';
 import RadioButton from '../RadioButton';
 import PicBox from '../PicBox';
+import PicUpload from '../PicUpload';
+
 import api from '../../api';
 
 export default class QuestionDetail extends Component {
@@ -15,7 +17,7 @@ export default class QuestionDetail extends Component {
       question: null,
       message: null,
       fileForUpload: null,      
-      picturePreview: null,
+      // picturePreview: null,
       fileUploadClicked: false
     }
   }
@@ -81,33 +83,6 @@ export default class QuestionDetail extends Component {
     })
   }
 
-  handleFileUploadChange = (e) => {
-    e.preventDefault();  
-    const file = e.target.files[0];
-    this.setState({
-      fileForUpload: file,
-      picturePreview: URL.createObjectURL(file)
-    })
-  }
-
-  handleFileUpload = (e) => {
-    e.preventDefault();  
-    if (this.state.fileForUpload) {
-      api.addPicture(this.state.fileForUpload)
-        .then(data => {
-          this.setState({message: "Upload Successfull!"})
-        })
-        .catch(err => console.log(err))
-    } else {
-      this.setState({message: "please choose a file"})
-    }
-    setTimeout(() => {
-      this.setState({
-        message: null
-      });
-    }, 3000);
-  }
-
   handleFileUploadClick = (e) => {
     e.preventDefault();  
     this.setState({
@@ -119,12 +94,7 @@ export default class QuestionDetail extends Component {
     return this.state.question 
     ? (
       <MDBContainer className="QuestionDetail">
-        {this.state.fileUploadClicked && 
-          <form id="fileupload" onSubmit={e => this.handleFileUpload(e)}>
-            <input type="file" onChange={e => this.handleFileUploadChange(e)}/><MDBBtn color="primary">send</MDBBtn>
-            {this.state.picturePreview && <img src={this.state.picturePreview} alt="uploadedpicture" />}
-          </form>
-        }
+         {this.state.fileUploadClicked && <PicUpload fileForUpload={this.state.fileForUpload} handleSubmit={this.handleSubmit}/>}
 
         <form onSubmit={e => this.handleSubmit(e)}>
           <input className="input-lg" type="text" name="title" value={this.state.question.title} onChange={e => this.handleChange(e, "title")} /> 
