@@ -13,7 +13,6 @@ onClick = (nr) => () => {
   this.setState({
     radio: !this.state.radio
   });
-  
 }
 
 render() {

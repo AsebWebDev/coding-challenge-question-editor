@@ -119,64 +119,64 @@ export default class QuestionDetail extends Component {
     return this.state.question 
     ? (
       <MDBContainer className="QuestionDetail d-flex flex-row">
-      <div className="left">
-        {this.state.fileUploadClicked && 
-          <MDBAnimation type="slideInLeft">
-            <form id="fileupload" onSubmit={e => this.handleFileUpload(e)}>
-              <input type="file" onChange={e => this.handleFileUploadChange(e)}/>
-              {this.state.picturePreview && <img src={this.state.picturePreview} alt="uploadedpicture" />}
-              <MDBBtn type="submit" color="primary">send</MDBBtn>
-            </form> 
-          </MDBAnimation>  
-        }
-        <form onSubmit={e => this.handleSubmit(e)}>
-          <input id="title" className="input-lg" type="text" name="title" value={this.state.question.title} onChange={e => this.handleChange(e, "title")} /> 
-          <MDBTable>
-            <MDBTableHead>
-              <tr>
-                <td></td>
-                <td></td>
-                {this.state.question.cols.map((col, i) => 
-                  <td key={i}>
-                  <Link to="#" onClick={e => this.handleFileUploadClick(e, i, 'col')}>
-                    <PicBox pic={col.picture}/>
-                  </Link>
-                  </td>
-                )}
-              </tr>
-              <tr>
-                <th></th>
-                <th></th>
-                {this.state.question.cols.map((col, i) => 
-                  <th key={i}>
-                  <input className="input-sm" type="text" name={i} value={col.title} onChange={e => this.handleChange(e, "col")} /> 
+        <div className="left">
+          {this.state.fileUploadClicked && 
+            <MDBAnimation type="slideInLeft">
+              <form id="fileupload" onSubmit={e => this.handleFileUpload(e)}>
+                <input type="file" onChange={e => this.handleFileUploadChange(e)}/>
+                {this.state.picturePreview && <img src={this.state.picturePreview} alt="uploadedpicture" />}
+                <MDBBtn type="submit" color="primary">send</MDBBtn>
+              </form> 
+            </MDBAnimation>  
+          }
+          <form onSubmit={e => this.handleSubmit(e)}>
+            <input id="title" className="input-lg" type="text" name="title" value={this.state.question.title} onChange={e => this.handleChange(e, "title")} /> 
+            <MDBTable>
+              <MDBTableHead>
+                <tr>
+                  <td></td>
+                  <td></td>
+                  {this.state.question.cols.map((col, i) => 
+                    <td key={i}>
+                    <Link to="#" onClick={e => this.handleFileUploadClick(e, i, 'col')}>
+                      <PicBox pic={col.picture}/>
+                    </Link>
+                    </td>
+                  )}
+                </tr>
+                <tr>
+                  <th></th>
+                  <th></th>
+                  {this.state.question.cols.map((col, i) => 
+                    <th key={i}>
+                    <input className="input-sm" type="text" name={i} value={col.title} onChange={e => this.handleChange(e, "col")} /> 
+                    </th>
+                  )}
+                  <th>
+                    <Link to="#" onClick={e => this.addCol(e)}> 
+                      <PicBox pic="https://cdn3.iconfinder.com/data/icons/glypho-generic-icons/64/plus-big-512.png"/>
+                    </Link>
                   </th>
+                </tr>
+              </MDBTableHead>
+              <MDBTableBody>
+                {this.state.question.rows.map((row, i) => 
+                  <Row key={i} i={i} question={this.state.question} handleChange={this.handleChange} handleFileUploadClick={this.handleFileUploadClick} row={row}/>
                 )}
                 <th>
-                  <Link to="#" onClick={e => this.addCol(e)}> 
+                  <Link to="#" onClick={e => this.addRow(e)}>
                     <PicBox pic="https://cdn3.iconfinder.com/data/icons/glypho-generic-icons/64/plus-big-512.png"/>
                   </Link>
-                </th>
-              </tr>
-            </MDBTableHead>
-            <MDBTableBody>
-              {this.state.question.rows.map((row, i) => 
-                <Row key={i} i={i} question={this.state.question} handleChange={this.handleChange} handleFileUploadClick={this.handleFileUploadClick} row={row}/>
-              )}
-              <th>
-                <Link to="#" onClick={e => this.addRow(e)}>
-                  <PicBox pic="https://cdn3.iconfinder.com/data/icons/glypho-generic-icons/64/plus-big-512.png"/>
-                </Link>
-              </th> 
-              {/* FIXME: Error in Console "Text nodes cannot appear as a child of..." */}      
-            </MDBTableBody>
-          </MDBTable>
-          <MDBBtn type="submit" color="success">Change</MDBBtn>
-        </form>
-        {this.state.message && <div className="info">{this.state.message}</div>}
-      </div>
+                </th> 
+                {/* FIXME: Error in Console "Text nodes cannot appear as a child of..." */}      
+              </MDBTableBody>
+            </MDBTable>
+            <MDBBtn type="submit" color="success">Change</MDBBtn>
+          </form>
+          {this.state.message && <div className="info">{this.state.message}</div>}
+        </div>
 
-      <Statistics question={this.state.question} counter={this.state.imageCounter}/>
+        <Statistics question={this.state.question} counter={this.state.imageCounter}/>
 
       </MDBContainer>
     )

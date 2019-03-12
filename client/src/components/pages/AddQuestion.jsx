@@ -18,9 +18,7 @@ export default class AddQuestion extends Component {
 
   handleClick(e) {
     e.preventDefault()
-    let data = {
-      title: this.state.title,
-    }
+    let data = { title: this.state.title }
     api.addQuestion(data)
       .then(result => {
         console.log('SUCCESS!')
@@ -44,9 +42,7 @@ export default class AddQuestion extends Component {
           Title: <input type="text" value={this.state.title} name="title" onChange={e => this.handleInputChange(e)} /> <br />
           <button onClick={(e) => this.handleClick(e)}>Create Question</button>
         </form>
-        {this.state.message && <div className="info">
-          {this.state.message}
-        </div>}
+        {this.state.message && <div className="info"> {this.state.message}</div>}
       </div>
     );
   }

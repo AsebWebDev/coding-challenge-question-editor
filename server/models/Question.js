@@ -8,7 +8,7 @@ const questionSchema = new mongoose.Schema({
   },
   cols: [
     {
-      title: {type: String},
+      title: String,
       picture: {
         type: String,
         default: "https://static.thenounproject.com/png/396915-200.png"
@@ -18,7 +18,7 @@ const questionSchema = new mongoose.Schema({
 
   rows: [
       {
-        title: {type: String},
+        title: String,
         picture: {
           type: String,
           default: "https://static.thenounproject.com/png/396915-200.png"
