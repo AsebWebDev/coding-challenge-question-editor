@@ -9,12 +9,6 @@ constructor(props) {
   }
 }
 
-onClick = (nr) => () => {
-  // this.setState({
-  //   radio: !this.state.radio
-  // });
-}
-
 render() {
   return (
     <div id="picbox"><img src={this.props.pic} alt=""/></div>
