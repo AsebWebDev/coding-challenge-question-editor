@@ -23,7 +23,6 @@ export default class QuestionDetail extends Component {
     }
   }
 
-
   handleChange = (event, key) => {  
     let index = event.target.name;
     let newQuestion = this.state.question;
@@ -75,6 +74,28 @@ export default class QuestionDetail extends Component {
     this.setState({ question: newQuestion })
   }
 
+  handleDelete = (event, i, direction) => {
+    event.preventDefault();
+    let newQuestion = this.state.question;
+    if (direction === "row") newQuestion.rows.splice(i,1)
+    else if (direction === "col") {
+      // newQuestion.rows.col.splice(i,1);
+      newQuestion.rows.forEach(row => row.col.splice(i,1));
+      newQuestion.cols.splice(i,1);
+    }
+    this.setState({ question: newQuestion })
+  }
+
+  removeRow = (event) => {
+    event.preventDefault();
+    let newQuestion = this.state.question;
+    let newTitle = "Row"+(newQuestion.rows.length+1);
+    let newRow = {col:[], title: newTitle, picture: "https://static.thenounproject.com/png/396915-200.png"};
+    for (let i = 0; i < newQuestion.cols.length; i++) newRow.col.push(false);
+    newQuestion.rows.push(newRow)
+    this.setState({ question: newQuestion })
+  }
+
   handleFileUploadClick = (e, i, direction) => {
     e.preventDefault();  
     this.setState({
@@ -92,6 +113,7 @@ export default class QuestionDetail extends Component {
       picturePreview: URL.createObjectURL(file)
     })
   }
+  
   
   handleFileUpload = (e) => {
     let file = this.state.fileForUpload;
@@ -129,15 +151,19 @@ export default class QuestionDetail extends Component {
               </form> 
             </MDBAnimation>  
           }
-          <form onSubmit={e => this.handleSubmit(e)}>
+          <form onSubmit={this.handleSubmit}>
             <input id="title" className="input-lg" type="text" name="title" value={this.state.question.title} onChange={e => this.handleChange(e, "title")} /> 
             <MDBTable>
               <MDBTableHead>
                 <tr>
                   <td></td>
                   <td></td>
+                  <td></td>
                   {this.state.question.cols.map((col, i) => 
                     <td key={i}>
+                    <Link to="#" onClick={e => this.handleDelete(e, i, "col")}>
+                      <PicBox pic="https://cdn1.iconfinder.com/data/icons/flat-web-browser/100/remove-button-512.png"/>
+                    </Link>
                     <Link to="#" onClick={e => this.handleFileUploadClick(e, i, 'col')}>
                       <PicBox pic={col.picture}/>
                     </Link>
@@ -145,6 +171,7 @@ export default class QuestionDetail extends Component {
                   )}
                 </tr>
                 <tr>
+                  <th></th>
                   <th></th>
                   <th></th>
                   {this.state.question.cols.map((col, i) => 
@@ -161,7 +188,7 @@ export default class QuestionDetail extends Component {
               </MDBTableHead>
               <MDBTableBody>
                 {this.state.question.rows.map((row, i) => 
-                  <Row key={i} i={i} question={this.state.question} handleChange={this.handleChange} handleFileUploadClick={this.handleFileUploadClick} row={row}/>
+                  <Row key={i} i={i} question={this.state.question} handleChange={this.handleChange} handleDelete={e=> this.handleDelete(e, i, "row")} handleFileUploadClick={this.handleFileUploadClick} row={row}/>
                 )}
                 <th>
                   <Link to="#" onClick={e => this.addRow(e)}>

@@ -23,6 +23,7 @@ render() {
   let {i, row } = this.props;
   return (
       <tr key={i}>
+      <td><Link to="#" onClick={e => this.props.handleDelete(e, i, "row")}><PicBox pic="https://cdn1.iconfinder.com/data/icons/flat-web-browser/100/remove-button-512.png"/></Link></td>
       <td><Link to="#" onClick={e => this.props.handleFileUploadClick(e, i, 'row')}><PicBox pic={row.picture}/></Link></td>
       <td>
         <input className="input-sm" type="text" name={i} value={row.title} onChange={e => this.props.handleChange(e, "row")} /> 

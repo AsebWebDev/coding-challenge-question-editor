@@ -75,6 +75,7 @@ router.post('/add-picture', upload.single('file'), (req, res, next) => {
   .then(question => {
     if (direction === "row") question.rows[index].picture = req.file.path; //FIXME: how to store path to image on server in mongo?
     else question.cols[index].picture = req.file.path;                     //FIXME: how to store path to image on server in mongo?
+		console.log('TCL: req.file.path', req.file.path)
     newQuestion = question;
   })
   .then (() => Question.findByIdAndUpdate(questionId, newQuestion, { new: true }))

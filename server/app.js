@@ -30,6 +30,7 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use(express.static(path.join(__dirname, '../client/build')))
+app.use(express.static(path.join(__dirname, '../files')))
 
 app.use('/api', require('./routes/index'))
 app.use('/api/questions', require('./routes/questions'))
