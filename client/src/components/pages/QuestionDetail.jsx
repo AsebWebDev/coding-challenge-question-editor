@@ -86,16 +86,6 @@ export default class QuestionDetail extends Component {
     this.setState({ question: newQuestion })
   }
 
-  removeRow = (event) => {
-    event.preventDefault();
-    let newQuestion = this.state.question;
-    let newTitle = "Row"+(newQuestion.rows.length+1);
-    let newRow = {col:[], title: newTitle, picture: "https://static.thenounproject.com/png/396915-200.png"};
-    for (let i = 0; i < newQuestion.cols.length; i++) newRow.col.push(false);
-    newQuestion.rows.push(newRow)
-    this.setState({ question: newQuestion })
-  }
-
   handleFileUploadClick = (e, i, direction) => {
     e.preventDefault();  
     this.setState({
